@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>CryptIQ</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+
+<style>
+*{box-sizing:border-box;}
+
+body{
+    margin:0;
+    font-family:'Inter',system-ui,sans-serif;
+    background:#020617;
+    color:#e2e8f0;
+    min-height:100vh;
+}
+
+/* ANIMATED BG */
+body::before{
+    content:'';
+    position:fixed;
+    top:0;left:0;right:0;bottom:0;
+    background:
+        radial-gradient(ellipse 80% 50% at 50% -20%,rgba(99,102,241,0.15),transparent),
+        radial-gradient(ellipse 60% 40% at 80% 50%,rgba(6,182,212,0.08),transparent),
+        radial-gradient(ellipse 60% 40% at 20% 80%,rgba(139,92,246,0.08),transparent);
+    pointer-events:none;
+    z-index:0;
+}
+
+body>*{position:relative;z-index:1;}
+
+/* NAVBAR */
+.navbar{
+    background:rgba(15,23,42,0.8);
+    backdrop-filter:blur(20px);
+    padding:16px 32px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    border-bottom:1px solid rgba(99,102,241,0.2);
+    position:sticky;
+    top:0;
+    z-index:100;
+}
+
+.navbar h2{
+    letter-spacing:1px;
+    font-weight:800;
+    font-size:22px;
+    background:linear-gradient(135deg,#818cf8,#22d3ee);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+    background-clip:text;
+}
+
+#searchBar{
+    padding:10px 16px;
+    border-radius:10px;
+    border:1px solid rgba(99,102,241,0.3);
+    outline:none;
+    width:260px;
+    margin-left:20px;
+    background:rgba(15,23,42,0.6);
+    color:white;
+    font-family:'Inter',sans-serif;
+    font-size:14px;
+    transition:0.3s;
+}
+
+#searchBar:focus{
+    border-color:#818cf8;
+    box-shadow:0 0 0 3px rgba(99,102,241,0.15);
+}
+
+#searchBar::placeholder{color:#64748b;}
+
+/* HERO */
+.hero{
+    text-align:center;
+    padding:60px 40px 40px;
+    max-width:700px;
+    margin:0 auto;
+}
+.hero h1{
+    font-size:clamp(32px,5vw,48px);
+    font-weight:800;
+    margin:0 0 16px;
+    background:linear-gradient(135deg,#c7d2fe,#818cf8,#22d3ee);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+    background-clip:text;
+    line-height:1.2;
+}
+.hero p{
+    color:#94a3b8;
+    font-size:17px;
+    line-height:1.6;
+    margin:0;
+}
+
+/* SECTION TITLE */
+.section-title{
+    padding:48px 40px 12px 40px;
+    font-size:13px;
+    font-weight:700;
+    color:#818cf8;
+    text-transform:uppercase;
+    letter-spacing:3px;
+    max-width:1200px;
+    margin:0 auto;
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.section-title::after{
+    content:'';
+    flex:1;
+    height:1px;
+    background:linear-gradient(90deg,rgba(99,102,241,0.3),transparent);
+}
+
+/* APP COUNT BADGE */
+.app-count{
+    background:rgba(99,102,241,0.2);
+    color:#a5b4fc;
+    padding:4px 10px;
+    border-radius:20px;
+    font-size:11px;
+    margin-left:10px;
+    letter-spacing:0;
+    text-transform:none;
+}
+
+/* CARD GRID */
+.card-container{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+    gap:20px;
+    padding:20px 40px;
+    max-width:1200px;
+    margin:0 auto;
+}
+
+/* CARD STYLE */
+.card{
+    background:rgba(30,41,59,0.5);
+    backdrop-filter:blur(10px);
+    border:1px solid rgba(255,255,255,0.06);
+    padding:28px;
+    border-radius:16px;
+    transition:all 0.3s cubic-bezier(0.4,0,0.2,1);
+    cursor:pointer;
+    position:relative;
+    overflow:hidden;
+}
+
+.card::before{
+    content:'';
+    position:absolute;
+    top:0;left:0;right:0;
+    height:3px;
+    background:linear-gradient(90deg,#6366f1,#22d3ee);
+    opacity:0;
+    transition:opacity 0.3s;
+}
+
+.card:hover{
+    transform:translateY(-4px);
+    border-color:rgba(99,102,241,0.3);
+    box-shadow:0 20px 40px rgba(0,0,0,0.3),0 0 60px rgba(99,102,241,0.06);
+}
+
+.card:hover::before{
+    opacity:1;
+}
+
+/* CARD ICON */
+.card-icon{
+    width:44px;height:44px;
+    border-radius:12px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin-bottom:16px;
+    font-size:22px;
+    background:rgba(99,102,241,0.12);
+    color:#818cf8;
+}
+
+.card-icon.teal{background:rgba(6,182,212,0.12);color:#22d3ee;}
+.card-icon.violet{background:rgba(139,92,246,0.12);color:#a78bfa;}
+.card-icon.amber{background:rgba(245,158,11,0.12);color:#fbbf24;}
+
+/* CARD TITLE */
+.card h3{
+    color:#f1f5f9;
+    margin:0 0 8px;
+    font-size:16px;
+    font-weight:600;
+}
+
+.card p{
+    color:#94a3b8;
+    margin:0;
+    font-size:14px;
+    line-height:1.5;
+}
+
+/* MODULE PAGE */
+.module{
+    display:none;
+    padding:40px;
+    max-width:700px;
+    margin:auto;
+    animation:fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn{
+    from{opacity:0;transform:translateY(12px);}
+    to{opacity:1;transform:translateY(0);}
+}
+
+.module h2{
+    font-weight:700;
+    background:linear-gradient(135deg,#e2e8f0,#818cf8);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+    background-clip:text;
+}
+
+/* INPUTS */
+textarea,input{
+    width:100%;
+    padding:12px 16px;
+    margin:10px 0;
+    border-radius:10px;
+    border:1px solid rgba(99,102,241,0.2);
+    background:rgba(15,23,42,0.6);
+    color:white;
+    font-family:'JetBrains Mono','Inter',monospace;
+    font-size:14px;
+    transition:0.3s;
+}
+
+textarea:focus,input:focus{
+    outline:none;
+    border-color:#818cf8;
+    box-shadow:0 0 0 3px rgba(99,102,241,0.15);
+}
+
+/* BUTTON */
+button{
+    padding:11px 20px;
+    background:linear-gradient(135deg,#6366f1,#818cf8);
+    color:white;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    margin:5px 4px 5px 0;
+    font-family:'Inter',sans-serif;
+    font-weight:600;
+    font-size:14px;
+    transition:all 0.2s;
+}
+
+button:hover{
+    transform:translateY(-1px);
+    box-shadow:0 4px 16px rgba(99,102,241,0.3);
+    background:linear-gradient(135deg,#818cf8,#a5b4fc);
+}
+
+/* BACK BUTTON */
+.back{
+    background:rgba(51,65,85,0.5);
+    border:1px solid rgba(255,255,255,0.1);
+}
+
+.back:hover{
+    background:rgba(71,85,105,0.5);
+    box-shadow:none;
+}
+
+/* FOOTER */
+.footer{
+    text-align:center;
+    padding:32px;
+    margin-top:60px;
+    background:rgba(2,6,23,0.8);
+    border-top:1px solid rgba(99,102,241,0.1);
+    color:#64748b;
+    font-size:14px;
+}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+
+    /* NAVBAR FIX */
+    .navbar{
+        flex-direction:column;
+        align-items:stretch;
+        gap:12px;
+        padding:12px 16px;
+    }
+
+    .navbar h2{
+        text-align:center;
+        font-size:20px;
+    }
+
+    /* SEARCH FULL WIDTH */
+    #searchBar{
+        width:100%;
+        margin:0;
+    }
+
+    /* RIGHT SECTION (LOGIN AREA) */
+    .nav-right{
+        width:100%;
+        display:flex;
+        flex-wrap:wrap;
+        justify-content:center;
+        gap:8px;
+    }
+
+    /* BUTTONS */
+    .nav-right button{
+        flex:1;
+        min-width:120px;
+    }
+
+    /* USER INFO FIX */
+    #userInfo{
+        width:100%;
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        gap:6px;
+        font-size:13px;
+        flex-wrap:wrap;
+    }
+
+    #userInfo img{
+        width:28px;
+        height:28px;
+    }
+
+    /* NAME CUT FIX */
+    #userInfo span{
+        max-width:120px;
+        overflow:hidden;
+        text-overflow:ellipsis;
+        white-space:nowrap;
+    }
+
+    /* HERO */
+    .hero{
+        padding:30px 16px;
+    }
+
+    .hero h1{
+        font-size:26px;
+    }
+
+    /* SECTION */
+    .section-title{
+        padding:24px 16px 8px;
+        font-size:12px;
+    }
+
+    /* CARDS */
+    .card-container{
+        padding:12px 16px;
+        gap:12px;
+    }
+
+    .card{
+        padding:20px;
+    }
+
+    /* MODULE */
+    .module{
+        padding:20px;
+    }
+}
+
+@media(max-width:400px){
+
+    .navbar h2{
+        font-size:18px;
+    }
+
+    button{
+        font-size:12px;
+        padding:8px 10px;
+    }
+
+    #userInfo span{
+        max-width:90px;
+    }
+}
+
+#userInfo{
+    display:flex;
+    align-items:center;
+    gap:6px;
+}
+
+/* desktop */
+.username{
+    max-width:150px;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+}
+
+</style>
+</head>
+<body>
+
+<div class="navbar">
+<h2>CryptIQ</h2>
+
+<input type="text" id="searchBar" placeholder="Search tools..." onkeyup="searchTools()">
+
+<div class="nav-right">
+<button onclick="googleLogin()">Login</button>
+<button onclick="logout()">Logout</button>
+<span id="userInfo"><span></span></span>
+</div>
+
+</div>
+
+<!-- ================= DASHBOARD ================= -->
+<div id="dashboard">
+
+<!-- HERO -->
+<div class="hero">
+<h1>Explore the World of Cryptography</h1>
+<p>Encrypt, decrypt, and analyze messages with classic and modern ciphers. Learn how cryptographic algorithms work through interactive demos.</p>
+</div>
+
+<!-- Traditional Encryption -->
+<div class="section-title">
+Traditional Encryption
+</div>
+
+<div class="card-container">
+
+<div class="card" onclick="openModule('atbash')">
+<div class="card-icon"><span class="material-icons-round">swap_horiz</span></div>
+<h3>Reverse Alphabet Cipher</h3>
+<p>Simple monoalphabetic substitution cipher originally used on the Hebrew alphabet</p>
+</div>
+
+<div class="card" onclick="openModule('caesar')">
+<div class="card-icon"><span class="material-icons-round">rotate_right</span></div>
+<h3>Shift Cipher</h3>
+<p>Famous shifting cipher used by Julius Caesar</p>
+</div>
+
+<div class="card" onclick="openModule('simplecolumn')">
+<div class="card-icon"><span class="material-icons-round">view_column</span></div>
+<h3>Columnar Permutation Cipher</h3>
+<p>Cipher that rearranges characters using a table</p>
+</div>
+
+<div class="card" onclick="openModule('monoalpha')">
+<div class="card-icon"><span class="material-icons-round">find_replace</span></div>
+<h3>Single Substitution Cipher</h3>
+<p>Cipher that replaces letters with letters/characters</p>
+</div>
+
+<div class="card" onclick="openModule('railfence')">
+<div class="card-icon"><span class="material-icons-round">timeline</span></div>
+<h3>Zigzag Transposition Cipher</h3>
+<p>Transposition cipher that uses a rail fence pattern</p>
+</div>
+
+<div class="card" onclick="openModule('multiplicative')">
+<div class="card-icon"><span class="material-icons-round">calculate</span></div>
+<h3>Modular Multiplication Cipher</h3>
+<p>Simple example for affine ciphers</p>
+</div>
+
+</div>
+
+<!-- Digital Encryption -->
+<div class="section-title">
+Digital Encryption
+</div>
+<div class="card-container">
+<div class="card" onclick="openModule('rsa')">
+<div class="card-icon teal"><span class="material-icons-round">enhanced_encryption</span></div>
+<h3>RSA (explained step by step)</h3>
+<p>The most widespread asymmetric method for encryption and signing.</p>
+</div>
+
+<div class="card" onclick="openModule('openssl')">
+<div class="card-icon teal"><span class="material-icons-round">fingerprint</span></div>
+<h3>OpenSSL</h3>
+<p>Toolkit for general-purpose cryptography with graphical controls.</p>
+</div>
+
+<div class="card" onclick="openModule('poll')">
+<div class="card-icon teal"><span class="material-icons-round">how_to_vote</span></div>
+<h3>Private polls (demo)</h3>
+<p>Conduct a private poll with homomorphic encryption.</p>
+</div>
+
+<div class="card" onclick="openModule('cryptobrief')">
+<div class="card-icon teal"><span class="material-icons-round">code</span></div>
+<h3>CryptoBrief</h3>
+<p>Simple and compact language for cryptographic algorithms.</p>
+</div>
+</div>
+
+<!-- Cipher Analysis -->
+<div class="section-title">
+Cipher Analysis
+</div>
+<div class="card-container">
+<div class="card" onclick="openModule('freq')">
+<div class="card-icon violet"><span class="material-icons-round">bar_chart</span></div>
+<h3>Frequency Analysis</h3>
+<p>Counts how often text fragments appear in a ciphertext.</p>
+</div>
+
+</div>
+
+<!-- Codes -->
+<div class="section-title">
+Codes
+</div>
+<div class="card-container">
+<div class="card" onclick="openModule('ascii')">
+<div class="card-icon amber"><span class="material-icons-round">tag</span></div>
+<h3>ASCII</h3>
+<p>Letters are replaced by ASCII numbers.</p>
+</div>
+
+<div class="card" onclick="openModule('base64')">
+<div class="card-icon amber"><span class="material-icons-round">data_object</span></div>
+<h3>Base64</h3>
+<p>Encodes binary data into printable characters.</p>
+</div>
+</div>
+
+</div>
+
+</div>
+
+<!-- ================= MODULE TEMPLATE ================= -->
+
+<div id="atbash" class="module">
+<button class="back" onclick="goBack()">← Back</button>
+<h2>Atbash Cipher</h2>
+<input id="atbashInput" placeholder="Enter text">
+<button onclick="atbashCipher()">Encrypt / Decrypt</button>
+<textarea id="atbashOutput"></textarea>
+</div>
+
+<div id="caesar" class="module">
+<button class="back" onclick="goBack()">← Back</button>
+<h2>Caesar Cipher</h2>
+<input id="caesarInput" placeholder="Enter text">
+<input id="shiftInput" type="number" value="3">
+<button onclick="caesarCipher()">Encrypt</button>
+<textarea id="caesarOutput"></textarea>
+</div>
+
+<div id="simplecolumn" class="module">
+<button class="back" onclick="goBack()">← Back</button>
+<h2>Simple Columnar Transposition</h2>
+<input id="columnInput" placeholder="Enter text">
+<button onclick="columnCipher()">Encrypt</button>
+<textarea id="columnOutput"></textarea>
+</div>
+
+<div id="monoalpha" class="module">
+<button class="back" onclick="goBack()">← Back</button>
+<h2>Monoalphabetic Substitution</h2>
+<input id="monoInput" placeholder="Enter text">
+<button onclick="monoCipher()">Encrypt</button>
+<textarea id="monoOutput"></textarea>
+</div>
+
+<div id="railfence" class="module">
+<button class="back" onclick="goBack()">← Back</button>
+<h2>Rail Fence Cipher</h2>
+<input id="railInput" placeholder="Enter text">
+<input id="railKey" type="number" value="3">
+<button onclick="railFence()">Encrypt</button>
+<textarea id="railOutput"></textarea>
+</div>
+
+<div id="multiplicative" class="module">
+<button class="back" onclick="goBack()">← Back</button>
+<h2>Multiplicative Cipher</h2>
+<input id="multiInput" placeholder="Enter text">
+<input id="multiKey" type="number" value="5">
+<button onclick="multiCipher()">Encrypt</button>
+<textarea id="multiOutput"></textarea>
+</div>
+
+<div id="rsa" class="module">
+<button class="back" onclick="goBack()">← Back</button>
+<h2>RSA Demo</h2>
+<input id="rsaInput" placeholder="Enter number">
+<button onclick="document.getElementById('rsaInput').value = Math.pow(document.getElementById('rsaInput').value,2)%33">Encrypt</button>
+</div>
+
+<div id="rsadid" class="module">
+<button class="back" onclick="goBack()">← Back</button>
+<h2>RSA Didactic</h2>
+<p>This demonstrates how p × q generates modulus n.</p>
+</div>
+
+<div id="openssl" class="module">
+<button class="back" onclick="goBack()">← Back</button>
+<h2>OpenSSL Hash Generator</h2>
+<input id="hashInput" placeholder="Enter text">
+<button onclick="document.getElementById('hashOutput').value=btoa(document.getElementById('hashInput').value)">Generate Hash (Demo)</button>
+<textarea id="hashOutput"></textarea>
+</div>
+
+<div id="poll" class="module">
+<button class="back" onclick="goBack()">← Back</button>
+<h2>Private Poll (Demo)</h2>
+<p>Vote Yes or No</p>
+<button onclick="alert('Vote Encrypted Successfully')">Vote Yes</button>
+<button onclick="alert('Vote Encrypted Successfully')">Vote No</button>
+</div>
+
+<div id="cryptobrief" class="module">
+<button class="back" onclick="goBack()">← Back</button>
+<h2>CryptoBrief</h2>
+<textarea placeholder="Write pseudo crypto algorithm..."></textarea>
+</div>
+
+<div id="kyber" class="module">
+<button class="back" onclick="goBack()">← Back</button>
+<h2>Kyber (Simulation)</h2>
+<p>Post-Quantum Key Encapsulation Demo</p>
+</div>
+
+<div id="bb84" class="module">
+<button class="back" onclick="goBack()">← Back</button>
+<h2>BB84 Simulation</h2>
+<p>Quantum Key Exchange Visualization</p>
+</div>
+
+<div id="freq" class="module">
+<button class="back" onclick="goBack()">← Back</button>
+<h2>Frequency Analysis</h2>
+<textarea id="freqInput"></textarea>
+<button onclick="analyzeFreq()">Analyze</button>
+<textarea id="freqOutput"></textarea>
+</div>
+
+<div id="column" class="module">
+<button class="back" onclick="goBack()">← Back</button>
+<h2>Columnar Transposition Analyzer</h2>
+<p>Analysis Demo Interface</p>
+</div>
+
+<div id="neural" class="module">
+<button class="back" onclick="goBack()">← Back</button>
+<h2>Neural Cipher Identifier</h2>
+<p>AI Model Simulation</p>
+</div>
+
+<div id="homo" class="module">
+<button class="back" onclick="goBack()">← Back</button>
+<h2>Homophonic Substitution Analyzer</h2>
+</div>
+
+<div id="ascii" class="module">
+<button class="back" onclick="goBack()">← Back</button>
+<h2>ASCII Converter</h2>
+<input id="asciiInput">
+<button onclick="convertASCII()">Convert</button>
+<textarea id="asciiOutput"></textarea>
+</div>
+
+<div id="bacon" class="module">
+<button class="back" onclick="goBack()">← Back</button>
+<h2>Bacon Cipher Demo</h2>
+<p>Hidden message simulation.</p>
+</div>
+
+<div id="base64" class="module">
+<button class="back" onclick="goBack()">← Back</button>
+<h2>Base64 Encoder</h2>
+<textarea id="b64Input"></textarea>
+<button onclick="document.getElementById('b64Output').value=btoa(document.getElementById('b64Input').value)">Encode</button>
+<textarea id="b64Output"></textarea>
+</div>
+
+<div id="cert" class="module">
+<button class="back" onclick="goBack()">← Back</button>
+<h2>Certificate Verification</h2>
+<p>Certificate status: VALID (Demo)</p>
+</div>
+
+<div class="footer">
+<span style="background:linear-gradient(135deg,#818cf8,#22d3ee);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-weight:700;">CryptIQ</span> &mdash; Interactive Cryptography Platform &middot; 2026
+</div>
+
+<script>
+/* Atbash */
+function atbashCipher(){
+let text=document.getElementById("atbashInput").value.toUpperCase();
+let result="";
+for(let char of text){
+if(char>='A'&&char<='Z'){
+result+=String.fromCharCode(90-(char.charCodeAt(0)-65));
+}else result+=char;
+}
+document.getElementById("atbashOutput").value=result;
+}
+
+/* Caesar */
+function caesarCipher(){
+let text=document.getElementById("caesarInput").value;
+let shift=parseInt(document.getElementById("shiftInput").value);
+let result="";
+for(let char of text){
+if(char.match(/[a-z]/i)){
+let code=text.charCodeAt(text.indexOf(char));
+let base=(char>='a')?97:65;
+result+=String.fromCharCode((code-base+shift)%26+base);
+}else result+=char;
+}
+document.getElementById("caesarOutput").value=result;
+}
+
+/* Simple Column (basic reverse demo) */
+function columnCipher(){
+let text=document.getElementById("columnInput").value;
+document.getElementById("columnOutput").value=text.split("").reverse().join("");
+}
+
+/* Monoalphabetic */
+function monoCipher(){
+let text=document.getElementById("monoInput").value;
+let alphabet="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+let key="QWERTYUIOPASDFGHJKLZXCVBNM";
+let result="";
+for(let char of text.toUpperCase()){
+let index=alphabet.indexOf(char);
+result+= index!=-1 ? key[index] : char;
+}
+document.getElementById("monoOutput").value=result;
+}
+
+/* Rail Fence */
+function railFence(){
+let text=document.getElementById("railInput").value;
+let key=parseInt(document.getElementById("railKey").value);
+let rails=Array.from({length:key},()=>[]);
+let dir=1,row=0;
+for(let char of text){
+rails[row].push(char);
+if(row==0) dir=1;
+if(row==key-1) dir=-1;
+row+=dir;
+}
+document.getElementById("railOutput").value=rails.flat().join("");
+}
+
+/* Multiplicative */
+function multiCipher(){
+let text=document.getElementById("multiInput").value.toUpperCase();
+let key=parseInt(document.getElementById("multiKey").value);
+let result="";
+for(let char of text){
+if(char>='A'&&char<='Z'){
+let x=char.charCodeAt(0)-65;
+result+=String.fromCharCode(((x*key)%26)+65);
+}else result+=char;
+}
+document.getElementById("multiOutput").value=result;
+}
+
+function openModule(id){
+document.getElementById("dashboard").style.display="none";
+document.querySelectorAll(".module").forEach(m=>m.style.display="none");
+document.getElementById(id).style.display="block";
+}
+function goBack(){
+document.querySelectorAll(".module").forEach(m=>m.style.display="none");
+document.getElementById("dashboard").style.display="block";
+}
+function analyzeFreq(){
+let text=document.getElementById("freqInput").value;
+let count={};
+for(let char of text){
+count[char]=(count[char]||0)+1;
+}
+document.getElementById("freqOutput").value=JSON.stringify(count,null,2);
+}
+function convertASCII(){
+let text=document.getElementById("asciiInput").value;
+let result="";
+for(let i=0;i<text.length;i++){
+result+=text.charCodeAt(i)+" ";
+}
+document.getElementById("asciiOutput").value=result;
+}
+
+// ===== GOOGLE LOGIN =====
+function googleLogin(){
+
+var provider = new firebase.auth.GoogleAuthProvider();
+
+provider.setCustomParameters({
+  prompt: "select_account"
+});
+
+firebase.auth().signInWithPopup(provider)
+.then(function(result){
+
+var user = result.user;
+
+document.getElementById("userInfo").innerHTML =
+"Welcome " + user.displayName;
+})
+.catch(function(error){
+console.log(error.message);
+alert(error.message);
+});
+
+}
+
+firebase.auth().onAuthStateChanged(function(user){
+  let box = document.getElementById("userInfo");
+
+  if(user){
+
+    let name = user.displayName || "User";
+
+    let photo = user.photoURL || 
+    "https://ui-avatars.com/api/?name=" + encodeURIComponent(name);
+
+    box.innerHTML = `
+      <img src="${photo}" 
+      style="width:36px;height:36px;border-radius:50%;object-fit:cover;">
+      
+      <span class="username">${name}</span>
+    `;
+
+  } else {
+    box.innerHTML = "";
+  }
+});
+
+// ===== LOGOUT =====
+function logout(){
+firebase.auth().signOut().then(()=>{
+  location.reload();
+});
+}
+</script>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyCqia8AWmgj66RJOh03uqXqZALIp_4gams",
+  authDomain: "cryptiq-dd9aa.firebaseapp.com",
+  projectId: "cryptiq-dd9aa",
+  storageBucket: "cryptiq-dd9aa.firebasestorage.app",
+  messagingSenderId: "342357138073",
+  appId: "1:342357138073:web:00a2b2e19814eb1cc3b608"
+};
+
+firebase.initializeApp(firebaseConfig);
+
+function searchTools(){
+    let input = document.getElementById("searchBar").value.toLowerCase();
+
+    let sections = document.querySelectorAll(".section-title");
+    let containers = document.querySelectorAll(".card-container");
+
+    sections.forEach((section, index) => {
+        let cards = containers[index].querySelectorAll(".card");
+        let hasVisibleCard = false;
+
+        cards.forEach(card => {
+            let text = card.innerText.toLowerCase();
+
+            if(text.includes(input)){
+                card.style.display = "block";
+                hasVisibleCard = true;
+            } else {
+                card.style.display = "none";
+            }
+        });
+
+        // 🔥 Show section only if it has matching cards
+        if(hasVisibleCard){
+            section.style.display = "block";
+            containers[index].style.display = "grid";
+        } else {
+            section.style.display = "none";
+            containers[index].style.display = "none";
+        }
+    });
+
+}
+</script>
+
+</body>
+</html>
